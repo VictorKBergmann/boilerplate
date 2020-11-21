@@ -1,70 +1,88 @@
+var animeList = [{
+  startTime : 0,
+  dt : -1,
+  translate : 2,
+  rotate : 3.14,
+  objectID : 1,
+  totalTime : 1000,
+  initialPosition : {x:0,y:0,z:0}
+}];
+var animeListCam = [{
+  startTime : 0,
+  dt : -1,
+  translate : 2,
+  rotate : 3.14,
+  objectID : 1,
+  totalTime : 1000,
+  initialPosition : {x:0,y:0,z:0}
+}];
 
-
-var startTime = Date.now();
-var initialPosition = [0,0,0]
-var initialRotation = 0;
-var parcialTime
-var partialTranslate
-var parcialRotation
-var stepNow = 0
-var steps = 0
-var objectID = 0
-var animeObject = false
-
-function animateStart(toTranslate, ToRotate, totalTime, steps, object, objanim) {
-  this.steps = steps
-  startTime = Date.now();
-  partialTranslate = toTranslate/(Math.ceil(steps/2));
-  parcialRotation = ToRotate/(Math.trunc(steps/2));
-  parcialTime = totalTime/steps;
-  dt = Date.now();
-  stepNow = 0
-  objectID = object
-  animeObject = objanim
+function anime(toTranslate, ToRotate, totalTim, object) {
+  console.log(object.position)
+  var obj = {
+  startTime : 0,
+  dt : -1,
+  translate : toTranslate,
+  rotate : ToRotate,
+  objectID :object.index,
+  totalTime : totalTim,
+  initialPosition : object.position}
+  return obj
 }
 
-function animateDOIT(){
 
-  if(stepNow >= steps || !animeObject ){return}
-  dt = Date.now() - startTime;
+
+function animationStart(object){
+  animeList[0].initialPosition.x = object.position.x;
+  animeList[0].initialPosition.y = object.position.y;
+  animeList[0].initialPosition.z = object.position.z;
+  animeList[0].initialRotation = object.rotate;
+  animeList[0].startTime = Date.now();
   
-  if( stepNow % 2 == 0){
-    config[objectID].position.x = ( (initialPosition[0]+ (partialTranslate* dt/parcialTime) )  );
-
-    initialRotation = config[objectID].rotate
-  }
-  else{
-    config[objectID].rotate = initialRotation + (parcialRotation*dt/parcialTime);
-    initialPosition[0] = config[objectID].position.x
-    
-  }  
-  if(dt > parcialTime){ stepNow++;startTime = Date.now();}
-
 }
 
-function animateDOITCam(){
-
-  if(stepNow >= steps || animeObject){return}
-  dt = Date.now() - startTime;
+function animationStartCam(object){
+  animeListCam[0].initialPosition.x = object.position.x;
+  animeListCam[0].initialPosition.y = object.position.y;
+  animeListCam[0].initialPosition.z = object.position.z;
+  animeListCam[0].initialRotation = object.rotate;
+  animeListCam[0].startTime = Date.now();
   
-  if( stepNow % 2 == 0){
-    camera[objectID].position.x = ( (initialPosition[0]+ (partialTranslate* dt/parcialTime) )  );
-
-    initialRotation = camera[objectID].target.x
-  }
-  else{
-    console.log(initialRotation)
-    console.log(parcialRotation)
-    camera[objectID].target.x = initialRotation + (parcialRotation*dt/parcialTime);
-    initialPosition[0] = camera[objectID].position.x
-    
-  }  
-  if(dt > parcialTime){ stepNow++;startTime = Date.now();}
-
 }
 
 
+function LinearAnimate(anime){
 
+  if( anime.dt == -1  ){animationStart(config[anime.objectID])}
+
+  anime.dt = Date.now() - anime.startTime;
+
+  config[anime.objectID].position.x = ((anime.initialPosition.x + (anime.translate* (anime.dt/anime.totalTime))));  
+  config[anime.objectID].rotate = anime.initialRotation + (anime.rotate*anime.dt/anime.totalTime);
+
+
+  return (anime.dt/anime.totalTime >= 1) // retorna se terminou
+}
+
+
+function animateDOITCam(anime){
+
+  if( anime.dt == -1  ){animationStart(camera[anime.objectID])}
+
+  anime.dt = Date.now() - anime.startTime;
+
+  camera[anime.objectID].position.x = ((anime.initialPosition.x + (anime.translate* (anime.dt/anime.totalTime))));  
+  camera[anime.objectID].target = anime.initialRotation + (anime.rotate*anime.dt/anime.totalTime);
+
+
+  return (anime.dt/anime.totalTime >= 1) // retorna se terminou
+
+}
+
+/* 
+function rotation(anime ){
+  config[anime.objectID].position.x  = raio * x0 + rcos theta, y0 +r sin theta
+} */
 
 
 

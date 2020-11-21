@@ -24,18 +24,21 @@ var config =[{ rotate: degToRad(20),
     position: {x: 0,y: 0,z: 100},
     target : {x: 0,y: 0,z: 0, lookAt : -1},
     up : [0, 1, 0],
+    index: 0,
     fieldOfViewRadians : degToRad(60)
   },
   {
     position: {x: 100,y: 0,z: 0},
     target : {x: 0,y: 0,z: 0, lookAt : -1},
     up : [0, 1, 0],
+    index: 1,
     fieldOfViewRadians : degToRad(60)
   },
   {
     position: {x: 0.05,y: -100,z: 0},
     target : {x: 0,y: 0,z: 0, lookAt : -1},
     up : [0, 1, 0],
+    index: 2,
     fieldOfViewRadians : degToRad(60)
   }
 ];
@@ -64,11 +67,7 @@ var config =[{ rotate: degToRad(20),
     selectedCamera : 0,
     animate: function animate() {
       if(this.objectID>= 0 && this.objectID < config.length){
-        startTime = Date.now();
-        
-        initialPosition = [config[this.objectID].position.x,config[this.objectID].position.y,config[this.objectID].position.z]
-
-        animateStart(this.translateSpace, this.RotateSpace, 1000, this.steps, this.objectID, true);
+        animeList.push(anime(this.translateSpace, this.RotateSpace, 1000, config[this.objectID]))       
       }
     },
     animateCam: function animateCam() {

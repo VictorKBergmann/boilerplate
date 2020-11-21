@@ -29,7 +29,13 @@ function main() {
   loadGUI();
   
   function render() {
-    animateDOIT();
+
+    if(animeList.length != 0){
+      if(LinearAnimate(animeList[0])) {  animeList.shift();}
+    }
+
+
+    //animateDOIT();
     animateDOITCam();
     if(benzier.objectID>= 0 && benzier.objectID < config.length){config[benzier.objectID].position = benzierCurve();}
     
