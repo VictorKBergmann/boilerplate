@@ -61,25 +61,42 @@ var config =[{ rotate: degToRad(20),
 
     gui: new dat.GUI(),
     translateSpace: 50,
-    RotateSpace: 6.28,
-    steps: 3,
+    RotateSpace: 0,
+    time: 1000,
     objectID: 1,
     selectedCamera : 0,
-    animate: function animate() {
+    animateLinear: function animateLinear() {
       if(this.objectID>= 0 && this.objectID < config.length){
-        animeList.push(anime(this.translateSpace, this.RotateSpace, 1000, config[this.objectID]))       
+        animeList.push(animeLinear(this.translateSpace, this.RotateSpace, this.time, config[this.objectID]))       
       }
     },
-    animateCam: function animateCam() {
-      startTime = Date.now();
-        
-      initialPosition = [camera[this.selectedCamera].position.x,camera[this.selectedCamera].position.y,camera[this.selectedCamera].position.z]
+    animateBenzier: function animateBenzier(){
+      if(this.objectID>= 0 && this.objectID < config.length){
 
-      animateStart(this.translateSpace, this.RotateSpace, 1000, this.steps, this.selectedCamera, false);
+        animeList.push(animeBenzier(benzier.p1,benzier.p2,benzier.p3,benzier.p4, this.time,config[this.objectID]));
+      }
+    },
+    animateRotate: function animateRotate(){
+      if(this.objectID>= 0 && this.objectID < config.length){
+
+        animeList.push(animeRotate(orbit,this.time,this.objectID));
+      }
+    },
+    animateLinearCam: function animateLinearCam() {
+      startTime = Date.now();
+      animeListCam.push(animeLinearCam(this.translateSpace, this.RotateSpace, this.time, this.selectedCamera))       
       
+    },
+    animateBenzierCam: function animateBenzierCam() {
+      startTime = Date.now();
+      animeListCam.push(animeBenzierCam(benzier.p1,benzier.p2,benzier.p3,benzier.p4, this.time, this.selectedCamera))       
       
-    }
-    
+    },
+    animateRotateCam: function animateRotateCam() {
+      startTime = Date.now();
+      animeListCam.push(animeRotateCam(orbit,this.time,this.selectedCamera))       
+      
+    },
 }
 
 var benzier = {
@@ -87,12 +104,16 @@ var benzier = {
   p2 : {x : -90, y : 50, z : 0},
   p3 : {x : 90, y : 50, z : 0},
   p4 : {x : 90, y : -50, z : 0},
-  t : 0,
-  objectID : -1
 };
 
-
-
+var orbit = {
+  x:0,
+  y:2,
+  z:1,
+  r:20,
+  rounds:3,
+  point:{x:0,y:20,z:0}
+}
 
 const loadGUI = () => {
 
@@ -114,16 +135,33 @@ const loadGUI = () => {
 
 
   var anim= i.gui.addFolder("animations")
-  anim.add(i,"translateSpace", -100, 100, 0.5);
-  anim.add(i,"RotateSpace", -50, 50, 0.05);
-  anim.add(i,"steps" ,2 ,10 ,1 )
-  anim.add(i,"objectID" ,-1 ,5 ,1 )  
-  anim.add(i,"animate");
-  anim.add(i,"animateCam");
+  anim.add(i,"time" ,1000 ,10000 ,1 )
+  anim.add(i,"objectID" ,-1 ,5 ,1 )
+  var lin = anim.addFolder("Linear")
+  lin.add(i,"translateSpace", -100, 100, 0.5);
+  lin.add(i,"RotateSpace", -50, 50, 0.05);  
+  lin.add(i,"animateLinear");
 
+  
+
+  var rotateF = anim.addFolder("rotate")
+  rotateF.add(orbit,"x",-200,200,0.005)
+  rotateF.add(orbit,"y",-200,200,0.005)
+  rotateF.add(orbit,"z",-200,200,0.005)
+  rotateF.add(orbit,"r", 0,100,0.005)
+  rotateF.add(orbit,"rounds", 0,20,0.1)
+  pointF = rotateF.addFolder("point")
+  
+  pointF.add(orbit.point,"x", -200,200,0.005)
+  pointF.add(orbit.point,"y", -200,200,0.005)
+  pointF.add(orbit.point,"z", -200,200,0.005)
+  
+  rotateF.add(i,"animateRotate")
+
+
+  
    
-   
-  var benzierF = i.gui.addFolder("benzier");
+  var benzierF = anim.addFolder("benzier");
 
   benzierF.add(benzier.p1, "x", -200, 200, 0.05 )
   benzierF.add(benzier.p1, "y", -200, 200, 0.05 )
@@ -136,13 +174,13 @@ const loadGUI = () => {
   benzierF.add(benzier.p3, "z", -200, 200, 0.05 )
   benzierF.add(benzier.p4, "x", -200, 200, 0.05 )
   benzierF.add(benzier.p4, "y", -200, 200, 0.05 )
-  benzierF.add(benzier.p4, "z", -200, 200, 0.05 )
-  benzierF.add(benzier, "t", 0, 1, 0.0005 )
-  benzierF.add(benzier,"objectID" ,-1 ,5 ,1 )  
-
+  benzierF.add(benzier.p4, "z", -200, 200, 0.05 )  
+  benzierF.add(i,"animateBenzier");
   config.forEach(element => addOnGui(i.gui, element));
   
-
+  lin.add(i,"animateLinearCam");
+  benzierF.add(i, "animateBenzierCam");
+  rotateF.add(i,"animateRotateCam")
 };
 
 

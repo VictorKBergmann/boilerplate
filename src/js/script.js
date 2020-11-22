@@ -27,17 +27,17 @@ function main() {
   }
 
   loadGUI();
-  
+  var f = 0
   function render() {
 
     if(animeList.length != 0){
-      if(LinearAnimate(animeList[0])) {  animeList.shift();}
+      if(Animate(animeList[0])) {  animeList.shift();}
     }
-
-
+    if(animeListCam.length != 0){
+      if(AnimateCam(animeListCam [0])) {  animeListCam.shift();}
+    }
     //animateDOIT();
-    animateDOITCam();
-    if(benzier.objectID>= 0 && benzier.objectID < config.length){config[benzier.objectID].position = benzierCurve();}
+    //animateDOITCam();
     
     
     twgl.resizeCanvasToDisplaySize(gl.canvas);
