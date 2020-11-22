@@ -4,7 +4,7 @@ const cone = 2
 
 
 
-var config =[{ rotate: degToRad(20),
+var config =[{ rotate: {x:1,y:1,z:1},
   scale: {x:1,y:1,z:1},
   position: {x: 0,y: 0,z: 0}, 
   index: 0,
@@ -12,7 +12,7 @@ var config =[{ rotate: degToRad(20),
   u_colorMult: [0.5, 1, 0.5, 1],
   type: cube
 },
- {rotate: degToRad(20),
+ {rotate: {x:1,y:1,z:1},
   scale: {x:1,y:1,z:1},
   position: {x: 0,y: -30,z: 0}, 
   index: 1,
@@ -46,7 +46,7 @@ var config =[{ rotate: degToRad(20),
 
   var i = { 
     addobj: function addObject() {config.push({ 
-        rotate: degToRad(20),
+        rotate: {x:1,y:1,z:1},
         scale: {x:1,y:1,z:1},
         position: {x: 0,y: 0,z: 0}, 
         index: config.length,
@@ -60,14 +60,15 @@ var config =[{ rotate: degToRad(20),
 
 
     gui: new dat.GUI(),
-    translateSpace: 50,
-    RotateSpace: 0,
+    translateSpace: {x:50,y:0,z:0},
+    RotateSpace: {x:0,y:Math.PI,z:0},
+    scaleSpace:{x:1,y:1,z:1},
     time: 1000,
     objectID: 1,
     selectedCamera : 0,
     animateLinear: function animateLinear() {
       if(this.objectID>= 0 && this.objectID < config.length){
-        animeList.push(animeLinear(this.translateSpace, this.RotateSpace, this.time, config[this.objectID]))       
+        animeList.push(animeLinear(this.translateSpace, this.RotateSpace,this.scaleSpace, this.time, config[this.objectID]))       
       }
     },
     animateBenzier: function animateBenzier(){
@@ -84,7 +85,7 @@ var config =[{ rotate: degToRad(20),
     },
     animateLinearCam: function animateLinearCam() {
       startTime = Date.now();
-      animeListCam.push(animeLinearCam(this.translateSpace, this.RotateSpace, this.time, this.selectedCamera))       
+      animeListCam.push(animeLinearCam(this.translateSpace.x, this.RotateSpace.y, this.time, this.selectedCamera))       
       
     },
     animateBenzierCam: function animateBenzierCam() {
@@ -138,8 +139,19 @@ const loadGUI = () => {
   anim.add(i,"time" ,1000 ,10000 ,1 )
   anim.add(i,"objectID" ,-1 ,5 ,1 )
   var lin = anim.addFolder("Linear")
-  lin.add(i,"translateSpace", -100, 100, 0.5);
-  lin.add(i,"RotateSpace", -50, 50, 0.05);  
+  trans = lin.addFolder("Translate");
+  trans.add(i.translateSpace,"x",-200,200,0.005) 
+  trans.add(i.translateSpace,"y",-200,200,0.005) 
+  trans.add(i.translateSpace,"z",-200,200,0.005) 
+  rot = lin.addFolder("Rotate");
+  rot.add(i.RotateSpace,"x",-200,200,0.005) 
+  rot.add(i.RotateSpace,"y",-200,200,0.005) 
+  rot.add(i.RotateSpace,"z",-200,200,0.005) 
+  scl = lin.addFolder("Scale");
+  scl.add(i.scaleSpace,"x", -5,5,0.005) 
+  scl.add(i.scaleSpace,"y",-5,5,0.005) 
+  scl.add(i.scaleSpace,"z",-5,5,0.005) 
+  
   lin.add(i,"animateLinear");
 
   
@@ -194,5 +206,5 @@ function addOnGui(gui, item){
   scaleFolder.add(item.scale,"x", 0, 10, 0.1);
   scaleFolder.add(item.scale,"y", 0, 10, 0.1);
   scaleFolder.add(item.scale,"z", 0, 10, 0.1);
-  folder.add(item, "rotate", 0, 20, 0.5);
+//  folder.add(item, "rotate", 0, 20, 0.5);
 }

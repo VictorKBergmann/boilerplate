@@ -103,9 +103,7 @@ function animationStartCam(object){
   }
   
 function AnimateCam(anime){
-    console.log(anime.objectID)
   if( anime.dt == -1  ){animationStartCam(camera[anime.objectID])}
-  console.log(camera[anime.objectID].target.x)
   anime.dt = Date.now() - anime.startTime;
   if(anime.type == lineartype){
     camera[anime.objectID].position.x = ((anime.initialPosition.x + (anime.translate* (anime.dt/anime.totalTime))));  
@@ -131,6 +129,7 @@ function AnimateCam(anime){
     camera[anime.objectID].position.x = final[0]
     camera[anime.objectID].position.y = final[1]
     camera[anime.objectID].position.z = final[2]
+    camera[anime.objectID].target = {x:anime.point[0],y:anime.point[1],z:anime.point[2]}
     //config[anime.objectID].rotate = teta 
   }
   return (anime.dt/anime.totalTime >= 1) // retorna se terminou

@@ -76,7 +76,7 @@ function main() {
   element.u_matrix = computeMatrix(
     viewProjectionMatrix,
     element.position,
-    element.rotate,
+    element.rotate.y,
     element.scale
   );
 
