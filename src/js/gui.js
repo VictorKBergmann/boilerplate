@@ -23,21 +23,21 @@ var config =[{ rotate: {x:1,y:1,z:1},
   var camera = [{
     position: {x: 0,y: 0,z: 100},
     target : {x: 0,y: 0,z: 0, lookAt : -1},
-    up : [0, 1, 0],
+    up : {x: 0,y: 1,z: 0},
     index: 0,
     fieldOfViewRadians : degToRad(60)
   },
   {
     position: {x: 100,y: 0,z: 0},
     target : {x: 0,y: 0,z: 0, lookAt : -1},
-    up : [0, 1, 0],
+    up : {x: 0,y: 1,z: 0},
     index: 1,
     fieldOfViewRadians : degToRad(60)
   },
   {
     position: {x: 0.05,y: -100,z: 0},
     target : {x: 0,y: 0,z: 0, lookAt : -1},
-    up : [0, 1, 0],
+    up : {x: 0,y: 1,z: 0},
     index: 2,
     fieldOfViewRadians : degToRad(60)
   }
@@ -66,6 +66,7 @@ var config =[{ rotate: {x:1,y:1,z:1},
     time: 1000,
     objectID: 1,
     selectedCamera : 0,
+    pause:false,
     animateLinear: function animateLinear() {
       if(this.objectID>= 0 && this.objectID < config.length){
         animeList.push(animeLinear(this.translateSpace, this.RotateSpace,this.scaleSpace, this.time, config[this.objectID]))       
@@ -85,7 +86,7 @@ var config =[{ rotate: {x:1,y:1,z:1},
     },
     animateLinearCam: function animateLinearCam() {
       startTime = Date.now();
-      animeListCam.push(animeLinearCam(this.translateSpace.x, this.RotateSpace.y, this.time, this.selectedCamera))       
+      animeListCam.push(animeLinearCam(this.translateSpace, this.RotateSpace, this.time, this.selectedCamera))       
       
     },
     animateBenzierCam: function animateBenzierCam() {
@@ -129,7 +130,15 @@ const loadGUI = () => {
     camTrans.add(camera[j].position,"x", -200, 200, 0.05 )
     camTrans.add(camera[j].position,"y", -200, 200, 0.05 )
     camTrans.add(camera[j].position,"z", -200, 200, 0.05 )
-    camTrans.add(camera[j].target,"x", -200, 200, 0.05 )
+    tar = camTrans.addFolder("target")
+    up = camTrans.addFolder("up")
+    tar.add(camera[j].target,"x", -200, 200, 0.05 )
+    tar.add(camera[j].target,"y", -200, 200, 0.05 )
+    tar.add(camera[j].target,"z", -200, 200, 0.05 )
+    up.add(camera[j].up,"x", -200, 200, 0.05 )
+    up.add(camera[j].up,"y", -200, 200, 0.05 )
+    up.add(camera[j].up,"z", -200, 200, 0.05 )
+    
     cam[j].add(camera[j].target,"lookAt", 0, 10, 1 )
     cam[j].add(camera[j],"fieldOfViewRadians", 0.1, Math.PI, 0.01 )
   }
@@ -193,6 +202,8 @@ const loadGUI = () => {
   lin.add(i,"animateLinearCam");
   benzierF.add(i, "animateBenzierCam");
   rotateF.add(i,"animateRotateCam")
+
+  anim.add(i,"pause")
 };
 
 
@@ -202,9 +213,14 @@ function addOnGui(gui, item){
   transFolder.add(item.position,"x", -100, 100, 0.5);
   transFolder.add(item.position,"y", -100, 100, 0.5);
   transFolder.add(item.position,"z", -100, 100, 0.5);
+  rotateF = folder.addFolder("rotate")
+  rotateF.add(item.rotate,"x", -20, 20, 0.5)
+  rotateF.add(item.rotate,"y", -20, 20, 0.5)
+  rotateF.add(item.rotate,"z", -20, 20, 0.5)
   scaleFolder = folder.addFolder("Scale");
   scaleFolder.add(item.scale,"x", 0, 10, 0.1);
   scaleFolder.add(item.scale,"y", 0, 10, 0.1);
   scaleFolder.add(item.scale,"z", 0, 10, 0.1);
+  
 //  folder.add(item, "rotate", 0, 20, 0.5);
 }

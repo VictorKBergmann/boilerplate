@@ -8,11 +8,11 @@ var animeList = [
   startTime : 0,
   dt : -1,
   type : lineartype,
-  translate :[50,0,0],
+  translate :[-100,0,0],
   rotate : [0,Math.PI,0],
   scale:[0,-0.5,0],
   objectID :1,
-  totalTime : 1000,
+  totalTime : 5000,
   initialPosition : [0,0,0],
   initialRotation : [0,0,0],
   initicialScale:[1,1,1]
@@ -71,9 +71,9 @@ function animeBenzier(point1, point2, point3, point4, totalTim, object){
 
 function animationStart(object){
     if(animeList[0].type == lineartype){
-    animeList[0].initialPosition = [object.position.x,object.position.y,object.position.z];
-    animeList[0].initialRotation = [object.rotate.x,object.rotate.y,object.rotate.z];
-    animeList[0].initicialScale = [object.scale.x,object.scale.y,object.scale.z]
+      animeList[0].initialPosition = [object.position.x,object.position.y,object.position.z];
+      animeList[0].initialRotation = [object.rotate.x,object.rotate.y,object.rotate.z];
+      animeList[0].initicialScale = [object.scale.x,object.scale.y,object.scale.z]
     }
   animeList[0].startTime = Date.now();
 
@@ -89,9 +89,15 @@ function Animate(anime){
     var scale = m4.addVectors(anime.initicialScale,mult(anime.scale ,(anime.dt/anime.totalTime)))
     
     
-    config[anime.objectID].position = {x: pos[0],y:pos[1],z:pos[2]}  
-    config[anime.objectID].rotate = {x: rot[0],y:rot[1],z:rot[2]}
-    config[anime.objectID].scale = {x: scale[0],y:scale[1],z:scale[2]}
+    config[anime.objectID].position.x = pos[0]
+    config[anime.objectID].position.y = pos[1]
+    config[anime.objectID].position.z = pos[2]
+    config[anime.objectID].rotate.x = rot[0]
+    config[anime.objectID].rotate.y = rot[1]
+    config[anime.objectID].rotate.z = rot[2]
+    config[anime.objectID].scale.x =scale[0]
+    config[anime.objectID].scale.y =scale[1]
+    config[anime.objectID].scale.z =scale[2]
     
   }
   if(anime.type == benzierType){
@@ -100,7 +106,7 @@ function Animate(anime){
     config[anime.objectID].position.x = pos[0]
     config[anime.objectID].position.y = pos[1]
     config[anime.objectID].position.z = pos[2]
-    console.log(pos)
+
   }
   if(anime.type == rotationType){
     var orbitunit = m4.normalize(anime.orbit)

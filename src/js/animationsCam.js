@@ -1,35 +1,35 @@
 var animeListCam = [{
     startTime : 0,
     dt : -1,
-    translate : 2,
-    rotate : 3.14,
+    translate : [2,0,0],
+    rotate : [3.14,0,0],
     objectID : 0,
     type: lineartype,
     totalTime : 1000,
-    initialPosition : {x:0,y:0,z:0},
-    initialTarget : {x:0,y:0, z:1},
-    initialUp:{x:0,y:0,z:0}
+    initialPosition : [0,0,0],
+    initialTarget : [0,0,1],
+    initialUp:[0,0,0]
 }];
 
 
 
-function animeLinearCam(toTranslate, ToRotate, totalTim, index) {
+function animeLinearCam(toTranslate, toRotate, totalTim, index) {
   
     var obj = {
     startTime : 0,
     dt : -1,
     type : lineartype,
-    translate : toTranslate,
-    rotate : ToRotate,
+    translate : [toTranslate.x,toTranslate.y,toTranslate.z],
+    rotate : [toRotate.x,toRotate.y,toRotate.z],
     objectID :index,
     totalTime : totalTim,
-    initialPosition : {x:0,y:0,z:0},
-    initialTarget:{x:0,y:0,z:0},
-    initialUp:{x:0,y:0,z:0},
+    initialPosition : [0,0,0],
+    initialTarget:[0,0,0],
+    initialUp:[0,0,0],
 
 
     }
-    console.log(index)
+    
     return obj
 }
   
@@ -41,9 +41,9 @@ function animeLinearCam(toTranslate, ToRotate, totalTim, index) {
     objectID : index,
     totalTime : time,
     rad: orbits.r,
-    initialPosition : {x:0,y:0,z:0},
-    initialTarget:{x:0,y:0,z:0},
-    initialUp:{x:0,y:0,z:0},
+    initialPosition : [0,0,0],
+    initialTarget:[0,0,0],
+    initialUp:[0,0,0],
     orbit : [orbits.x,orbits.y,orbits.z],
     round : orbits.rounds,   
     point : [orbits.point.x,orbits.point.y,orbits.point.z]
@@ -57,30 +57,15 @@ function animeLinearCam(toTranslate, ToRotate, totalTim, index) {
       type : benzierType,
       objectID :index,
       totalTime : totalTim,
-      p1:{x:0,y:0,z:0},
-      p2:{x:0,y:0,z:0},
-      p3:{x:0,y:0,z:0},
-      p4:{x:0,y:0,z:0},
-      initialPosition:{x:0,y:0,z:0},
-      initialTarget:{x:0,y:0,z:0},
-      initialUp:{x:0,y:0,z:0},
+      p1:[point1.x,point1.y,point1.z],
+      p2:[point2.x,point2.y,point2.z],
+      p3:[point3.x,point3.y,point3.z],
+      p4:[point4.x,point4.y,point4.z],
+      initialPosition:[0,0,0],
+      initialTarget:[0,0,0],
+      initialUp:[0,0,0],
   }
     
-    obj.p1.x =point1.x
-    obj.p1.y =point1.y
-    obj.p1.z =point1.z
-    
-    obj.p2.x =point2.x
-    obj.p2.y =point2.y
-    obj.p2.z =point2.z
-    
-    obj.p3.x =point3.x
-    obj.p3.y =point3.y
-    obj.p3.z =point3.z
-  
-    obj.p4.x =point4.x
-    obj.p4.y =point4.y
-    obj.p4.z =point4.z
     
     return obj
   }
@@ -88,16 +73,10 @@ function animeLinearCam(toTranslate, ToRotate, totalTim, index) {
   
   
 function animationStartCam(object){
-    animeListCam[0].initialPosition.x = object.position.x;
-    animeListCam[0].initialPosition.y = object.position.y;
-    animeListCam[0].initialPosition.z = object.position.z;
-    animeListCam[0].initialTarget.x = object.target.x;
-    animeListCam[0].initialTarget.y = object.target.y;
-    animeListCam[0].initialTarget.z = object.target.z;
-    animeListCam[0].initialUp.x = object.up.x;
-    animeListCam[0].initialUp.y = object.up.y;
-    animeListCam[0].initialUp.z = object.up.z;
-
+    animeListCam[0].initialPosition = [object.position.x,object.position.y,object.position.z];
+    animeListCam[0].initialTarget = [object.target.x,object.target.y,object.target.z];
+    animeListCam[0].initialUp = [object.up.x,object.up.y,object.up.z];
+    
     animeListCam[0].startTime = Date.now();
     
   }
@@ -106,17 +85,32 @@ function AnimateCam(anime){
   if( anime.dt == -1  ){animationStartCam(camera[anime.objectID])}
   anime.dt = Date.now() - anime.startTime;
   if(anime.type == lineartype){
-    camera[anime.objectID].position.x = ((anime.initialPosition.x + (anime.translate* (anime.dt/anime.totalTime))));  
-    camera[anime.objectID].target.x = ((anime.initialPosition.x + (anime.translate* (anime.dt/anime.totalTime))));  
     
-    //camera[anime.objectID].rotate = anime.initialRotation + (anime.rotate*anime.dt/anime.totalTime);
-  }
+    var pos = m4.addVectors(anime.initialPosition , (mult(anime.translate, (anime.dt/anime.totalTime))));
+    var tar = m4.addVectors(anime.initialTarget , (mult(anime.translate, (anime.dt/anime.totalTime))))
+    camera[anime.objectID].position.x = pos[0]
+    camera[anime.objectID].position.y = pos[1]
+    camera[anime.objectID].position.z = pos[2] 
+    //camera[anime.objectID].target.x = tar[0]
+  //  camera[anime.objectID].target.y = tar[1]
+//    camera[anime.objectID].target.z = tar[2]  
+    
+    //console.log(Math.cos(anime.rotate[0]))
+    var vec = [camera[anime.objectID].target.x,camera[anime.objectID].target.y,camera[anime.objectID].target.z]
+    vec = m4.normalize(vec)
+    console.log((Math.cos(anime.rotate[0]*anime.dt/anime.totalTime)+ vec[2])) 
+    camera[anime.objectID].target.z =Math.cos(anime.rotate[0]*anime.dt/anime.totalTime)+ vec[2]
+  //  camera[anime.objectID].target.x = m4.addVectors(Math.cos(mult(anime.rotate[1],anime.dt/anime.totalTime), vec[0]))
+
+
+ }
   if(anime.type == benzierType){
     var t = anime.dt/anime.totalTime;
-    camera[anime.objectID].position.x = Math.pow((1 - t),3)* anime.p1.x + 3*Math.pow((1-t),2)*t*anime.p2.x +3*(1-t)*Math.pow(t,2)*anime.p3.x + Math.pow(t,3)*anime.p4.x
-    camera[anime.objectID].position.y = Math.pow((1 - t),3)* anime.p1.y + 3*Math.pow((1-t),2)*t*anime.p2.y +3*(1-t)*Math.pow(t,2)*anime.p3.y + Math.pow(t,3)*anime.p4.y
-    camera[anime.objectID].position.z = Math.pow((1 - t),3)* anime.p1.z + 3*Math.pow((1-t),2)*t*anime.p2.z +3*(1-t)*Math.pow(t,2)*anime.p3.z + Math.pow(t,3)*anime.p4.z
-
+    var pos = m4.addVectors(m4.addVectors(m4.addVectors(  mult(anime.p1,Math.pow((1 - t),3)), mult(anime.p2,(3*Math.pow((1-t),2)*t))), mult(anime.p3,(Math.pow(t,2)*3*(1-t)))), mult(anime.p4,Math.pow(t,3)))
+    camera[anime.objectID].position.x = pos[0]
+    camera[anime.objectID].position.y = pos[1]
+    camera[anime.objectID].position.z = pos[2]
+    
   }
   if(anime.type == rotationType){
     var orbitunit = m4.normalize(anime.orbit)

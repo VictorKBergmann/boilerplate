@@ -14,7 +14,7 @@ function main() {
   var fieldOfViewRadians = degToRad(60);
 
 
-  function computeMatrix(viewProjectionMatrix, translation, yRotation, scale) {
+  function computeMatrix(viewProjectionMatrix, translation, Rotation, scale) {
     var matrix = m4.translate(
       viewProjectionMatrix,
       translation.x,
@@ -22,22 +22,20 @@ function main() {
       translation.z,
     );
     matrix = m4.scale(matrix,scale.x,scale.y,scale.z)
-
-    return m4.yRotate(matrix, yRotation);
+    matrix = m4.xRotate(matrix,Rotation.x)
+    matrix = m4.zRotate(matrix,Rotation.z)
+    return m4.yRotate(matrix, Rotation.y);
   }
-
+  
   loadGUI();
-  var f = 0
   function render() {
 
-    if(animeList.length != 0){
+    if(animeList.length != 0 && !i.pause){
       if(Animate(animeList[0])) {  animeList.shift();}
     }
-    if(animeListCam.length != 0){
+    if(animeListCam.length != 0 && !i.pause){
       if(AnimateCam(animeListCam [0])) {  animeListCam.shift();}
     }
-    //animateDOIT();
-    //animateDOITCam();
     
     
     twgl.resizeCanvasToDisplaySize(gl.canvas);
@@ -56,7 +54,7 @@ function main() {
       camera[i.selectedCamera].target.y = config[camera[i.selectedCamera].target.lookAt].position.y
       camera[i.selectedCamera].target.z = config[camera[i.selectedCamera].target.lookAt].position.z
     }
-    var cameraMatrix = m4.lookAt([camera[i.selectedCamera].position.x,camera[i.selectedCamera].position.y,camera[i.selectedCamera].position.z], [camera[i.selectedCamera].target.x,camera[i.selectedCamera].target.y,camera[i.selectedCamera].target.z], camera[i.selectedCamera].up);
+    var cameraMatrix = m4.lookAt([camera[i.selectedCamera].position.x,camera[i.selectedCamera].position.y,camera[i.selectedCamera].position.z], [camera[i.selectedCamera].target.x,camera[i.selectedCamera].target.y,camera[i.selectedCamera].target.z], [camera[i.selectedCamera].up.x,camera[i.selectedCamera].up.y,camera[i.selectedCamera].up.z]);
 
     // Make a view matrix from the camera matrix.
     var viewMatrix = m4.inverse(cameraMatrix);
@@ -76,7 +74,7 @@ function main() {
   element.u_matrix = computeMatrix(
     viewProjectionMatrix,
     element.position,
-    element.rotate.y,
+    element.rotate,
     element.scale
   );
 
