@@ -30,10 +30,16 @@ function main() {
   loadGUI();
   function render() {
 
-    if(animeList.length != 0 && !i.pause){
+    var contine = true
+    if(animeList.length != 0 ){
+      if(animeList[0].dt == -1) contine = !i.pause
+      else contine = true
+    }
+ 
+    if(animeList.length != 0 && contine){
       if(Animate(animeList[0])) {  animeList.shift();}
     }
-    if(animeListCam.length != 0 && !i.pause){
+    if(animeListCam.length != 0 && contine){
       if(AnimateCam(animeListCam [0])) {  animeListCam.shift();}
     }
     

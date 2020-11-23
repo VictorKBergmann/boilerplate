@@ -91,14 +91,16 @@ function AnimateCam(anime){
     camera[anime.objectID].position.x = pos[0]
     camera[anime.objectID].position.y = pos[1]
     camera[anime.objectID].position.z = pos[2] 
-    //camera[anime.objectID].target.x = tar[0]
-  //  camera[anime.objectID].target.y = tar[1]
-//    camera[anime.objectID].target.z = tar[2]  
+    camera[anime.objectID].target.x = tar[0]
+    camera[anime.objectID].target.y = tar[1]
+    camera[anime.objectID].target.z = tar[2]  
     
     //console.log(Math.cos(anime.rotate[0]))
     var vec = [camera[anime.objectID].target.x,camera[anime.objectID].target.y,camera[anime.objectID].target.z]
     vec = m4.normalize(vec)
-    console.log((Math.cos(anime.rotate[0]*anime.dt/anime.totalTime)+ vec[2])) 
+    
+    
+    
     camera[anime.objectID].target.z =Math.cos(anime.rotate[0]*anime.dt/anime.totalTime)+ vec[2]
   //  camera[anime.objectID].target.x = m4.addVectors(Math.cos(mult(anime.rotate[1],anime.dt/anime.totalTime), vec[0]))
 

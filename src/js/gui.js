@@ -70,6 +70,7 @@ var config =[{ rotate: {x:1,y:1,z:1},
     animateLinear: function animateLinear() {
       if(this.objectID>= 0 && this.objectID < config.length){
         animeList.push(animeLinear(this.translateSpace, this.RotateSpace,this.scaleSpace, this.time, config[this.objectID]))       
+        console.log(animeList.length)
       }
     },
     animateBenzier: function animateBenzier(){
