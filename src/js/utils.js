@@ -8,8 +8,6 @@ function mult(a,b){
     return c
   }
 
-var matrix = []
-
 
 function initialize(){
   for(var i = -1; i!=2; i++){ 
@@ -19,17 +17,13 @@ function initialize(){
         config.push({ 
           rotate: {x: 0,y: 0,z: 0},
           scale: {x:1,y:1,z:1},
-          position: {x: j*25,y: k*25,z: i*25}, 
+          position: {x: j*20,y: k*20,z: i*20}, 
           index: config.length,
           u_matrix: m4.identity(),
           u_colorMult: [Math.random(), Math.random(), Math.random(), 1],
           type: cube
         })
-        matrix.push(
-          {position: {x: i*25,y: j*25,z: k*25},
-          index: config.length
-        })
-        
+                
       }
     }
   }
@@ -47,14 +41,14 @@ function reorganize(){
   xn = []
   
   config.forEach(element => {
-    if(element.position.x ==  25){xp.push(element.index)}
-    if(element.position.x == -25){xn.push(element.index)}
+    if(element.position.x ==  20){xp.push(element.index)}
+    if(element.position.x == -20){xn.push(element.index)}
 
-    if(element.position.y ==  25){yp.push(element.index)}
-    if(element.position.y == -25){yn.push(element.index)}
+    if(element.position.y ==  20){yp.push(element.index)}
+    if(element.position.y == -20){yn.push(element.index)}
     
-    if(element.position.z ==  25){zp.push(element.index)}
-    if(element.position.z == -25){zn.push(element.index)}
+    if(element.position.z ==  20){zp.push(element.index)}
+    if(element.position.z == -20){zn.push(element.index)}
 
   });
 } 
@@ -68,6 +62,7 @@ function rotateDO(list, ClockWise, axis){
 console.log(list.length)
   var round = 0.25
   var contine =false
+  
   if(isPositive(ClockWise)  && axis == -3 && !contine){ round *= -1;ClockWise *= -1; contine = true}
   if(!isPositive(ClockWise) && axis == 3 && !contine){ ClockWise *= -1;contine = true }
   if(isPositive(ClockWise)  && axis == 3 && !contine){ round *= -1; ClockWise *= -1;contine = true }
@@ -80,7 +75,7 @@ console.log(list.length)
   if(!isPositive(ClockWise) && axis == 1 && !contine){ClockWise *= -1;contine = true}
   if(isPositive(ClockWise)  && axis == 1 && !contine){ round *= -1; ClockWise *= -1;contine = true }
   if(!isPositive(ClockWise) && axis == -1 && !contine){ round *= -1;contine = true}
-  
+   
     if(axis == 1){axis = [1,0,0]}
     if(axis == 2){axis = [0,1,0]}
     if(axis == 3){axis = [0,0,1]}
@@ -91,14 +86,14 @@ console.log(list.length)
   list.forEach(element => {
     
     
-    var rad = m4.length(m4.subtractVectors([config[element].position.x,config[element].position.y,config[element].position.z],mult(axis,50)))
+    var rad = m4.length(m4.subtractVectors([config[element].position.x,config[element].position.y,config[element].position.z],mult(axis,40)))
     
     var b = {x: axis[0],
       y : axis[1],
       z: axis[2],
       r:rad,
       rounds:round,
-      point:{x:axis[0]*25,y:axis[1]*25,z:axis[2]*25}
+      point:{x:axis[0]*20,y:axis[1]*20,z:axis[2]*20}
 
     }
     animeList.push(animeRotate(b, 2000, element, ClockWise));

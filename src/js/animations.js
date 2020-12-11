@@ -65,6 +65,9 @@ function animationStart(object, h){
       animeList[h].initialRotation = [object.rotate.x,object.rotate.y,object.rotate.z];
       animeList[h].initicialScale = [object.scale.x,object.scale.y,object.scale.z]
     }
+    if(animeList[h].type == rotationType){
+      animeList[h].initialRotation = [object.rotate.x,object.rotate.y,object.rotate.z];
+    }
   animeList[h].startTime = Date.now();
   
 }
@@ -113,9 +116,9 @@ function Animate(anime, h){
     config[anime.objectID].position.x = final[0]
     config[anime.objectID].position.y = final[1]
     config[anime.objectID].position.z = final[2]
-    config[anime.objectID].rotate.x = (anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[0]
-    config[anime.objectID].rotate.y = (anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[1]
-    config[anime.objectID].rotate.z = (anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[2]
+    config[anime.objectID].rotate.x = ((anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[0]) /*  + anime.initialRotation[0]  */
+    config[anime.objectID].rotate.y = ((anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[1]) /*+  anime.initialRotation[1]  */
+    config[anime.objectID].rotate.z = ((anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[2])/*  + anime.initialRotation[2] */
   }
   return (anime.dt/anime.totalTime == 1) // retorna se terminou
 }
