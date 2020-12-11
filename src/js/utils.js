@@ -65,7 +65,7 @@ var zp,zn, yp, yn, xp, xn;
 
 function rotateDO(list, ClockWise, axis){
   if(animeList.length != 0 ){return}
-
+console.log(list.length)
   var round = 0.25
   var contine =false
   if(isPositive(ClockWise)  && axis == -3 && !contine){ round *= -1;ClockWise *= -1; contine = true}
@@ -114,12 +114,3 @@ function signal(b){
   if(b>=0) return 1
   return -1
 }
-/* 
-var orbit = {
-  x:0,
-  y:2,
-  z:1,
-  r:20,
-  rounds:3,
-  point:{x:0,y:20,z:0}
-} */

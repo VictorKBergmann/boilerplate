@@ -41,7 +41,6 @@ var config =[];
         type: Math.floor((Math.random()*3))
       });
 
-      addOnGui(this.gui, config[config.length-1]);
     },
 
 
@@ -86,6 +85,21 @@ var config =[];
       animeListCam.push(animeRotateCam(orbit,this.time,this.selectedCamera))       
       
     },
+    X_pos_CW: function X_pos_CW(){rotateDO(xp, 1, 1);},
+    X_pos_CC: function X_pos_CC(){rotateDO(xp, -1, 1);},
+    X_neg_CW: function X_neg_CW(){rotateDO(xn, 1, -1);},
+    X_neg_CC: function X_neg_CC(){rotateDO(xn, -1, -1);},
+
+    Y_pos_CW: function Y_pos_CW(){rotateDO(yp, 1, 2);},
+    Y_pos_CC: function Y_pos_CC(){rotateDO(yp, -1, 2);},
+    Y_neg_CW: function Y_neg_CW(){rotateDO(yn, 1, -2);},
+    Y_neg_CC: function Y_neg_CC(){rotateDO(yn, -1, -2);},
+
+    Z_pos_CW: function Z_pos_CW(){rotateDO(zp, 1, 3);},
+    Z_pos_CC: function Z_pos_CC(){rotateDO(zp, -1, 3);},
+    Z_neg_CW: function Z_neg_CW(){rotateDO(zn, 1, -3);},
+    Z_neg_CC: function Z_neg_CC(){rotateDO(zn, -1, -3);},
+
 }
 
 var benzier = {
@@ -105,8 +119,6 @@ var orbit = {
 }
 
 const loadGUI = () => {
-
-  i.gui.add(i,"addobj");
 
   var cam = [0,1,2];
   var cameras = i.gui.addFolder("cameras");
@@ -130,86 +142,20 @@ const loadGUI = () => {
     cam[j].add(camera[j],"fieldOfViewRadians", 0.1, Math.PI, 0.01 )
   }
 
+  i.gui.add(i,"X_pos_CW");
+  i.gui.add(i,"X_pos_CC");
+  i.gui.add(i,"X_neg_CW");
+  i.gui.add(i,"X_neg_CC");
 
-  var anim= i.gui.addFolder("animations")
+  i.gui.add(i,"Y_pos_CW");
+  i.gui.add(i,"Y_pos_CC");
+  i.gui.add(i,"Y_neg_CW");
+  i.gui.add(i,"Y_neg_CC");
 
-  anim.add(i,"time" ,1000 ,10000 ,1 )
-  anim.add(i,"objectID" ,-1 ,5 ,1 )
-  var lin = anim.addFolder("Linear")
-  trans = lin.addFolder("Translate");
-  trans.add(i.translateSpace,"x",-200,200,0.005) 
-  trans.add(i.translateSpace,"y",-200,200,0.005) 
-  trans.add(i.translateSpace,"z",-200,200,0.005) 
-  rot = lin.addFolder("Rotate");
-  rot.add(i.RotateSpace,"x",-200,200,0.005) 
-  rot.add(i.RotateSpace,"y",-200,200,0.005) 
-  rot.add(i.RotateSpace,"z",-200,200,0.005) 
-  scl = lin.addFolder("Scale");
-  scl.add(i.scaleSpace,"x", -5,5,0.005) 
-  scl.add(i.scaleSpace,"y",-5,5,0.005) 
-  scl.add(i.scaleSpace,"z",-5,5,0.005) 
+  i.gui.add(i,"Z_pos_CW");
+  i.gui.add(i,"Z_pos_CC");
+  i.gui.add(i,"Z_neg_CW");
+  i.gui.add(i,"Z_neg_CC");
   
-  lin.add(i,"animateLinear");
-
-   
-
-  var rotateF = anim.addFolder("rotate")
-  rotateF.add(orbit,"x",-200,200,0.005)
-  rotateF.add(orbit,"y",-200,200,0.005)
-  rotateF.add(orbit,"z",-200,200,0.005)
-  rotateF.add(orbit,"r", 0,100,0.005)
-  rotateF.add(orbit,"rounds", 0,20,0.1)
-  pointF = rotateF.addFolder("point")
-  
-  pointF.add(orbit.point,"x", -200,200,0.005)
-  pointF.add(orbit.point,"y", -200,200,0.005)
-  pointF.add(orbit.point,"z", -200,200,0.005)
-  
-  rotateF.add(i,"animateRotate")
-
-
-  
-   
-  var benzierF = anim.addFolder("benzier");
-
-  benzierF.add(benzier.p1, "x", -200, 200, 0.05 )
-  benzierF.add(benzier.p1, "y", -200, 200, 0.05 )
-  benzierF.add(benzier.p1, "z", -200, 200, 0.05 )
-  benzierF.add(benzier.p2, "x", -200, 200, 0.05 )
-  benzierF.add(benzier.p2, "y", -200, 200, 0.05 )
-  benzierF.add(benzier.p2, "z", -200, 200, 0.05 )
-  benzierF.add(benzier.p3, "x", -200, 200, 0.05 )
-  benzierF.add(benzier.p3, "y", -200, 200, 0.05 )
-  benzierF.add(benzier.p3, "z", -200, 200, 0.05 )
-  benzierF.add(benzier.p4, "x", -200, 200, 0.05 )
-  benzierF.add(benzier.p4, "y", -200, 200, 0.05 )
-  benzierF.add(benzier.p4, "z", -200, 200, 0.05 )  
-  benzierF.add(i,"animateBenzier");
-  config.forEach(element => addOnGui(i.gui, element));
-  
-  lin.add(i,"animateLinearCam");
-  benzierF.add(i, "animateBenzierCam");
-  rotateF.add(i,"animateRotateCam")
-
-  anim.add(i,"pause")
 };
 
-
-function addOnGui(gui, item){
-  var folder = (gui.addFolder("Object "+ item.index));  
-  transFolder = folder.addFolder("Translation");
-  transFolder.add(item.position,"x", -100, 100, 0.5);
-  transFolder.add(item.position,"y", -100, 100, 0.5);
-  transFolder.add(item.position,"z", -100, 100, 0.5);
-  rotateF = folder.addFolder("rotate")
-  rotateF.add(item.rotate,"x", -20, 20, 0.5)
-  rotateF.add(item.rotate,"y", -20, 20, 0.5)
-  rotateF.add(item.rotate,"z", -20, 20, 0.5)
-  scaleFolder = folder.addFolder("Scale");
-  scaleFolder.add(item.scale,"x", 0, 10, 0.1);
-  scaleFolder.add(item.scale,"y", 0, 10, 0.1);
-  scaleFolder.add(item.scale,"z", 0, 10, 0.1);
-  
-//  folder.add(item, "rotate", 0, 20, 0.5);
-}
- 

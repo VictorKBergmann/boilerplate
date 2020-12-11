@@ -106,7 +106,7 @@ function Animate(anime, h){
 
     var vector = mult(m4.cross(orbitunit, anime.vetor), anime.rad)
     
-    var teta = 2* anime.round*Math.PI* (anime.dt/anime.totalTime)
+    var teta = 2* anime.round*Math.PI* (anime.dt/anime.totalTime) - degToRad(90)
 
     final =m4.addVectors( m4.addVectors( mult(vector,Math.cos( teta)) ,  mult(m4.cross(orbitunit,vector), Math.sin(teta))), anime.point)
     //rodrigues rotation formula: https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula#:~:text=In%20the%20theory%20of%20three-dimensional%20rotation%2C%20Rodrigues%27%20rotation,space%2C%20given%20an%20axis%20and%20angle%20of%20rotation.

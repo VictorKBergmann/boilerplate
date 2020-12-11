@@ -38,8 +38,7 @@ function main() {
       else contine = true
     }
 
-    if(animeList.length == 0){ reorganize(); 
-    }
+    if(animeList.length == 0){ reorganize(); }
 
     if(animeList.length != 0 && contine){
       for(var j = 0; j < animeList.length; j++){
