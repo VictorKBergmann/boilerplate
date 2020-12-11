@@ -11,9 +11,7 @@ function main() {
   var cubeVAO   = twgl.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
   var coneVAO   = twgl.createVAOFromBufferInfo(gl, programInfo, coneBufferInfo);
 
-  var fieldOfViewRadians = degToRad(60);
-
-
+  
   function computeMatrix(viewProjectionMatrix, translation, Rotation, scale) {
     var matrix = m4.translate(
       viewProjectionMatrix,
@@ -26,18 +24,27 @@ function main() {
     matrix = m4.zRotate(matrix,Rotation.z)
     return m4.yRotate(matrix, Rotation.y);
   }
-  
-  loadGUI();
-  function render() {
 
+  initialize();
+  loadGUI();
+  rotateDO(zn, 1, -3);
+ 
+
+  function render() {
+    //console.log(config[20].position)
     var contine = true
-    if(animeList.length != 0 ){
+    if(animeList.length != 0 ){//continue word is used by node already :,(
       if(animeList[0].dt == -1) contine = !i.pause
       else contine = true
     }
- 
+
+    if(animeList.length == 0){ reorganize(); 
+    }
+
     if(animeList.length != 0 && contine){
-      if(Animate(animeList[0])) {  animeList.shift();}
+      for(var j = 0; j < animeList.length; j++){
+        if(Animate(animeList[j],j)) {  animeList.splice(j,1);}
+      }
     }
     if(animeListCam.length != 0 && contine){
       if(AnimateCam(animeListCam [0])) {  animeListCam.shift();}

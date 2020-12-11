@@ -1,8 +1,8 @@
 var animeListCam = [{
     startTime : 0,
     dt : -1,
-    translate : [2,0,0],
-    rotate : [3.14,0,0],
+    translate : [0,0,0],
+    rotate : [0,0,0],
     objectID : 0,
     type: lineartype,
     totalTime : 1000,

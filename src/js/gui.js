@@ -4,24 +4,10 @@ const cone = 2
 
 
 
-var config =[{ rotate: {x:1,y:1,z:1},
-  scale: {x:1,y:1,z:1},
-  position: {x: 0,y: 0,z: 0}, 
-  index: 0,
-  u_matrix: m4.identity(),
-  u_colorMult: [0.5, 1, 0.5, 1],
-  type: cube
-},
- {rotate: {x:1,y:1,z:1},
-  scale: {x:1,y:1,z:1},
-  position: {x: 0,y: -30,z: 0}, 
-  index: 1,
-  u_matrix: m4.identity(),
-  u_colorMult: [0.5, 1, 0.5, 1],
-  type: sphere}];
+var config =[];
  
   var camera = [{
-    position: {x: 0,y: 0,z: 100},
+    position: {x: -70,y: -60,z: 100},
     target : {x: 0,y: 0,z: 0, lookAt : -1},
     up : {x: 0,y: 1,z: 0},
     index: 0,
@@ -146,6 +132,7 @@ const loadGUI = () => {
 
 
   var anim= i.gui.addFolder("animations")
+
   anim.add(i,"time" ,1000 ,10000 ,1 )
   anim.add(i,"objectID" ,-1 ,5 ,1 )
   var lin = anim.addFolder("Linear")
@@ -164,7 +151,7 @@ const loadGUI = () => {
   
   lin.add(i,"animateLinear");
 
-  
+   
 
   var rotateF = anim.addFolder("rotate")
   rotateF.add(orbit,"x",-200,200,0.005)
@@ -225,3 +212,4 @@ function addOnGui(gui, item){
   
 //  folder.add(item, "rotate", 0, 20, 0.5);
 }
+ 

@@ -4,19 +4,7 @@ const rotationType = 2
 
 
 var animeList = [
-{
-  startTime : 0,
-  dt : -1,
-  type : lineartype,
-  translate :[-100,0,0],
-  rotate : [0,Math.PI,0],
-  scale:[0,-0.5,0],
-  objectID :1,
-  totalTime : 5000,
-  initialPosition : [0,0,0],
-  initialRotation : [0,0,0],
-  initicialScale:[1,1,1]
-}
+
 ];
 
 function animeLinear(toTranslate, toRotate,toScale, totalTim, object) {
@@ -37,7 +25,7 @@ function animeLinear(toTranslate, toRotate,toScale, totalTim, object) {
   return obj
 }
 
-function animeRotate(orbits, time, index){
+function animeRotate(orbits, time, index, clockWise){
  var obj = {
   startTime : 0,
   dt : -1,
@@ -47,7 +35,9 @@ function animeRotate(orbits, time, index){
   rad: orbits.r,
   orbit : [orbits.x,orbits.y,orbits.z],
   round : orbits.rounds,   
-  point : [orbits.point.x,orbits.point.y,orbits.point.z]
+  point : [orbits.point.x,orbits.point.y,orbits.point.z],
+  vetor :  m4.normalize([config[index].position.x, config[index].position.y,config[index].position.z]),
+  clockwise: clockWise
  }
  return obj
 }
@@ -69,26 +59,28 @@ function animeBenzier(point1, point2, point3, point4, totalTim, object){
 }
 
 
-function animationStart(object){
-    if(animeList[0].type == lineartype){
-      animeList[0].initialPosition = [object.position.x,object.position.y,object.position.z];
-      animeList[0].initialRotation = [object.rotate.x,object.rotate.y,object.rotate.z];
-      animeList[0].initicialScale = [object.scale.x,object.scale.y,object.scale.z]
+function animationStart(object, h){
+    if(animeList[h].type == lineartype){
+      animeList[h].initialPosition = [object.position.x,object.position.y,object.position.z];
+      animeList[h].initialRotation = [object.rotate.x,object.rotate.y,object.rotate.z];
+      animeList[h].initicialScale = [object.scale.x,object.scale.y,object.scale.z]
     }
-  animeList[0].startTime = Date.now();
-
+  animeList[h].startTime = Date.now();
+  
 }
 
-function Animate(anime){
-  if( anime.dt == -1  ){animationStart(config[anime.objectID])}
+function Animate(anime, h){
+  if( anime.dt == -1  ){animationStart(config[anime.objectID], h)}
   
   anime.dt = Date.now() - anime.startTime;
+  if(anime.dt/anime.totalTime > 1){anime.dt = anime.totalTime}
   if(anime.type == lineartype){
     var pos = (m4.addVectors(anime.initialPosition,mult(anime.translate, (anime.dt/anime.totalTime))));  
     var rot = m4.addVectors(anime.initialRotation , mult(anime.rotate ,(anime.dt/anime.totalTime)));
     var scale = m4.addVectors(anime.initicialScale,mult(anime.scale ,(anime.dt/anime.totalTime)))
     
     
+
     config[anime.objectID].position.x = pos[0]
     config[anime.objectID].position.y = pos[1]
     config[anime.objectID].position.z = pos[2]
@@ -111,7 +103,9 @@ function Animate(anime){
   if(anime.type == rotationType){
     var orbitunit = m4.normalize(anime.orbit)
     var final= [0,0,0]
-    var vector = m4.cross(orbitunit, [0, anime.rad,0])
+
+    var vector = mult(m4.cross(orbitunit, anime.vetor), anime.rad)
+    
     var teta = 2* anime.round*Math.PI* (anime.dt/anime.totalTime)
 
     final =m4.addVectors( m4.addVectors( mult(vector,Math.cos( teta)) ,  mult(m4.cross(orbitunit,vector), Math.sin(teta))), anime.point)
@@ -119,9 +113,11 @@ function Animate(anime){
     config[anime.objectID].position.x = final[0]
     config[anime.objectID].position.y = final[1]
     config[anime.objectID].position.z = final[2]
-    //config[anime.objectID].rotate = teta
-    
+    config[anime.objectID].rotate.x = (anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[0]
+    config[anime.objectID].rotate.y = (anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[1]
+    config[anime.objectID].rotate.z = (anime.clockwise *Math.PI * (anime.dt/anime.totalTime) /2) * orbitunit[2]
   }
-  return (anime.dt/anime.totalTime >= 1) // retorna se terminou
+  return (anime.dt/anime.totalTime == 1) // retorna se terminou
 }
+
 
