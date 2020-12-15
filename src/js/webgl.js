@@ -1,30 +1,43 @@
 const vertexShaderSource = `#version 300 es
 
   in vec4 a_position;
-  in vec4 a_color;
+ 
+
+  in vec2 a_texcoord;
+  in uint a_faceId;
+  out vec2 v_texCoord;
+  flat out uint v_faceId;
 
   uniform mat4 u_matrix;
 
-  out vec4 v_color;
 
   void main() {
+    
     gl_Position = u_matrix * a_position;
-
-    v_color = a_color;
+   
+    
+    v_faceId = a_faceId;
+    v_texCoord = a_texcoord;
+    
   }
 `;
 
 const fragmentShaderSource = `#version 300 es
 precision highp float;
 
-in vec4 v_color;
 
-uniform vec4 u_colorMult;
+in vec2 v_texCoord;
+flat in uint v_faceId;
+
+uniform mediump sampler2DArray u_diffuse;
+
+uniform uint u_faceIndex[6];
+
 
 out vec4 outColor;
 
 void main() {
-   outColor = v_color * u_colorMult;
+   outColor = texture(u_diffuse, vec3(v_texCoord, u_faceIndex[v_faceId]));
 }
 `;
 

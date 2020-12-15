@@ -1,8 +1,3 @@
-const cube = 0
-const sphere = 1
-const cone = 2
-
-
 
 var config =[];
  
@@ -37,39 +32,17 @@ var config =[];
         position: {x: 0,y: 0,z: 0}, 
         index: config.length,
         u_matrix: m4.identity(),
-        u_colorMult: [Math.random(), Math.random(), Math.random(), 1],
-        type: Math.floor((Math.random()*3))
       });
 
     },
 
 
     gui: new dat.GUI(),
-    translateSpace: {x:50,y:0,z:0},
-    RotateSpace: {x:0,y:Math.PI,z:0},
-    scaleSpace:{x:1,y:1,z:1},
-    time: 1000,
     objectID: 1,
     selectedCamera : 0,
     pause:false,
-    animateLinear: function animateLinear() {
-      if(this.objectID>= 0 && this.objectID < config.length){
-        animeList.push(animeLinear(this.translateSpace, this.RotateSpace,this.scaleSpace, this.time, config[this.objectID]))       
-        console.log(animeList.length)
-      }
-    },
-    animateBenzier: function animateBenzier(){
-      if(this.objectID>= 0 && this.objectID < config.length){
+    
 
-        animeList.push(animeBenzier(benzier.p1,benzier.p2,benzier.p3,benzier.p4, this.time,config[this.objectID]));
-      }
-    },
-    animateRotate: function animateRotate(){
-      if(this.objectID>= 0 && this.objectID < config.length){
-
-        animeList.push(animeRotate(orbit,this.time,this.objectID));
-      }
-    },
     animateLinearCam: function animateLinearCam() {
       startTime = Date.now();
       animeListCam.push(animeLinearCam(this.translateSpace, this.RotateSpace, this.time, this.selectedCamera))       
@@ -100,22 +73,6 @@ var config =[];
     Z_neg_CW: function Z_neg_CW(){rotateDO(zn, 1, -3);},
     Z_neg_CC: function Z_neg_CC(){rotateDO(zn, -1, -3);},
 
-}
-
-var benzier = {
-  p1 : {x : -90, y : -50, z : 0},
-  p2 : {x : -90, y : 50, z : 0},
-  p3 : {x : 90, y : 50, z : 0},
-  p4 : {x : 90, y : -50, z : 0},
-};
-
-var orbit = {
-  x:0,
-  y:2,
-  z:1,
-  r:20,
-  rounds:3,
-  point:{x:0,y:20,z:0}
 }
 
 const loadGUI = () => {

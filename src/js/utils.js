@@ -16,14 +16,14 @@ function initialize(){
         if(i == 0 && j == 0 && k == 0){continue}
         config.push({ 
           rotate: {x: 0,y: 0,z: 0},
-          scale: {x:1,y:1,z:1},
+          scale: {x:10,y:10,z:10},
           position: {x: j*20,y: k*20,z: i*20}, 
           index: config.length,
           u_matrix: m4.identity(),
-          u_colorMult: [Math.random(), Math.random(), Math.random(), 1],
-          type: cube
+
         })
-                
+      
+        if( j== 0 && k == -1 && i == 0){console.log(config.length)}      
       }
     }
   }
@@ -41,6 +41,7 @@ function reorganize(){
   xn = []
   
   config.forEach(element => {
+
     if(element.position.x ==  20){xp.push(element.index)}
     if(element.position.x == -20){xn.push(element.index)}
 
@@ -51,15 +52,15 @@ function reorganize(){
     if(element.position.z == -20){zn.push(element.index)}
 
   });
+
 } 
 
-var zp,zn, yp, yn, xp, xn;
+var zp = [],zn= [], yp= [], yn= [], xp= [], xn= [];
 
 
 
 function rotateDO(list, ClockWise, axis){
   if(animeList.length != 0 ){return}
-console.log(list.length)
   var round = 0.25
   var contine =false
   
@@ -70,8 +71,8 @@ console.log(list.length)
 
   if(!isPositive(ClockWise) && axis == 2 && !contine){ClockWise *= -1;contine = true}
   if(isPositive(ClockWise)  && axis == 2 && !contine){ round *= -1; ClockWise *= -1;contine = true }
-  if(!isPositive(ClockWise) && axis == -2 && !contine){ round *= -1}
-
+  if(!isPositive(ClockWise) && axis == -2 && !contine){ round *= -1;contine = true }
+ 
   if(!isPositive(ClockWise) && axis == 1 && !contine){ClockWise *= -1;contine = true}
   if(isPositive(ClockWise)  && axis == 1 && !contine){ round *= -1; ClockWise *= -1;contine = true }
   if(!isPositive(ClockWise) && axis == -1 && !contine){ round *= -1;contine = true}
@@ -96,10 +97,11 @@ console.log(list.length)
       point:{x:axis[0]*20,y:axis[1]*20,z:axis[2]*20}
 
     }
-    animeList.push(animeRotate(b, 2000, element, ClockWise));
-    
+    animeList.push(animeRotate(b, 500, element, ClockWise));
+
   });
 }
+
 
 function isPositive(b){
   if(b>=0) return true

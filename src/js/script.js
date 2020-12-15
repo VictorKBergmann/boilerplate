@@ -3,13 +3,29 @@ function main() {
 
   //const cubeTranslation = [0, 0, 0];
 
-  var sphereBufferInfo = flattenedPrimitives.createSphereBufferInfo(gl, 10, 12, 6);
-  var cubeBufferInfo   = flattenedPrimitives.createCubeBufferInfo(gl, 20);
-  var coneBufferInfo   = flattenedPrimitives.createTruncatedConeBufferInfo(gl, 10, 0, 20, 12, 1, true, false);
+  const arrays = {
+    position: [1, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1, -1, 1, -1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1, 1, -1, 1, -1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1, -1, 1, 1, -1, 1, -1, -1, -1, -1, -1],
+    normal:   [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0, -1],
+    texcoord: [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
+    faceId:   { numComponents: 1, data: new Uint8Array([0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6]), },
+    indices:  [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7, 8, 9, 10, 8, 10, 11, 12, 13, 14, 12, 14, 15, 16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23],
+  };
+  const bufferInfo = twgl.createBufferInfoFromArrays(gl, arrays);
 
-  var sphereVAO = twgl.createVAOFromBufferInfo(gl, programInfo, sphereBufferInfo);
-  var cubeVAO   = twgl.createVAOFromBufferInfo(gl, programInfo, cubeBufferInfo);
-  var coneVAO   = twgl.createVAOFromBufferInfo(gl, programInfo, coneBufferInfo);
+  const slices = [
+    "src/images/amarelo.png",
+      "src/images/branco.png",
+      "src/images/vermelho.png",
+      "src/images/azul.png",
+      "src/images/verde.png",
+      "src/images/laranja.png",
+  ];
+  const tex = twgl.createTexture(gl, {
+    target: gl.TEXTURE_2D_ARRAY,
+    src: slices,
+    
+  });
+
 
   
   function computeMatrix(viewProjectionMatrix, translation, Rotation, scale) {
@@ -20,31 +36,43 @@ function main() {
       translation.z,
     );
     matrix = m4.scale(matrix,scale.x,scale.y,scale.z)
-    matrix = m4.xRotate(matrix,Rotation.x)
-    matrix = m4.zRotate(matrix,Rotation.z)
-    return m4.yRotate(matrix, Rotation.y);
+    matrix = m4.xRotate(matrix, Rotation.x)
+    matrix = m4.yRotate(matrix, Rotation.y)
+    matrix = m4.zRotate(matrix, Rotation.z)
+
+
+    return matrix
+
   }
+
+
+
 
   initialize();
   loadGUI();
-  rotateDO(zn, 1, -3);
+  
+  //rotateDO(zn, 1, -3);
  
 
   function render() {
-    //console.log(config[20].position)
     var contine = true
     if(animeList.length != 0 ){//continue word is used by node already :,(
       if(animeList[0].dt == -1) contine = !i.pause
       else contine = true
     }
 
-    if(animeList.length == 0){ reorganize(); }
+
 
     if(animeList.length != 0 && contine){
       for(var j = 0; j < animeList.length; j++){
-        if(Animate(animeList[j],j)) {  animeList.splice(j,1);}
+        if(Animate(animeList[j],j)) {  animeList.splice(j,1);
+          if(animeList.length == 0)
+            reorganize();
+            
+        }
       }
     }
+    
     if(animeListCam.length != 0 && contine){
       if(AnimateCam(animeListCam [0])) {  animeListCam.shift();}
     }
@@ -52,10 +80,14 @@ function main() {
     
     twgl.resizeCanvasToDisplaySize(gl.canvas);
 
+
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+    //novo
+    
     var aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     var projectionMatrix = m4.perspective(camera[0].fieldOfViewRadians, aspect, 1, 2000);
 
@@ -78,26 +110,23 @@ function main() {
     
   config.forEach(element => {
 
-  if(element.type == cube){gl.bindVertexArray(cubeVAO);}
-  if(element.type == sphere){gl.bindVertexArray(sphereVAO);}
-  if(element.type == cone){gl.bindVertexArray(coneVAO);}
-
-
+    
   element.u_matrix = computeMatrix(
     viewProjectionMatrix,
     element.position,
     element.rotate,
     element.scale
   );
-
+  console.log(element.rotate)
+  element.u_diffuse= tex
+  element.u_faceIndex= [0, 1, 2, 3, 4, 5,6,7,8,9]
+  twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
+      
   // Set the uniforms we just computed
   twgl.setUniforms(programInfo, element);
 
-  if(element.type == cube)  {twgl.drawBufferInfo(gl, cubeBufferInfo);   }
-  if(element.type == sphere){twgl.drawBufferInfo(gl, sphereBufferInfo); }
-  if(element.type == cone)  {twgl.drawBufferInfo(gl, coneBufferInfo);   }
- 
-
+  twgl.drawBufferInfo(gl, bufferInfo);
+  
 }); 
   
 	requestAnimationFrame(render);
