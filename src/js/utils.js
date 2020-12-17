@@ -2,6 +2,37 @@ const degToRad = (d) => (d * Math.PI) / 180;
 
 const radToDeg = (r) => (r * 180) / Math.PI;
 
+function rotationZYX(A,B,G){
+    dst = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    var sinA = Math.sin(A);
+    var sinB = Math.sin(B);
+    var sinG = Math.sin(G);
+    var cosA = Math.cos(A);
+    var cosB = Math.cos(B);
+    var cosG = Math.cos(G);
+
+    dst[ 0] = cosA *cosB;
+    dst[ 1] = sinA * cosB;
+    dst[ 2] = - sinB;
+    dst[ 3] = 0
+
+    dst[ 4] = cosA*sinB*sinG - sinA*cosG;
+    dst[ 5] = sinA*sinB*sinG + cosA*cosG;
+    dst[ 6] = cosB*sinG;
+    dst[ 7] = 0;
+
+    dst[ 8] = cosA*sinB*cosG - sinA*sinG;
+    dst[ 9] = sinA*sinB*cosG + cosA*sinG;
+    dst[ 10] = cosB*cosG;
+    dst[11] = 0;
+
+    dst[12] = 0;
+    dst[13] = 0;
+    dst[14] = 0;
+    dst[15] = 1;
+    return dst
+}
+
 function mult(a,b){
     var c = [0,0,0]
     for(var i =0; i!= a.length;i++) c[i] = a[i]*b

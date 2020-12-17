@@ -52,14 +52,14 @@ function Animate(anime, h){
     
  
     config[anime.objectID].rotate.x = ((anime.clockwise *(Math.PI/2) * (anime.dt/anime.totalTime) )* orbitunit[0]) + anime.initialRotation[0]
-    config[anime.objectID].rotate.y = ((anime.clockwise *(Math.PI/2) * (anime.dt/anime.totalTime) )* orbitunit[1])+ anime.initialRotation[1]
-    config[anime.objectID].rotate.z = ((anime.clockwise *(Math.PI/2) * (anime.dt/anime.totalTime) )* orbitunit[2])+ anime.initialRotation[2]
+    config[anime.objectID].rotate.y = ((anime.clockwise *(Math.PI/2) * (anime.dt/anime.totalTime) )* orbitunit[1]) + anime.initialRotation[1]
+    config[anime.objectID].rotate.z = ((anime.clockwise *(Math.PI/2) * (anime.dt/anime.totalTime) )* orbitunit[2]) + anime.initialRotation[2]
 
 
 
-    if(config[anime.objectID].rotate.x > 2*Math.PI)config[anime.objectID].rotate.x -= 2*Math.PI
-    if(config[anime.objectID].rotate.y > 2*Math.PI)config[anime.objectID].rotate.y -= 2*Math.PI
-    if(config[anime.objectID].rotate.z > 2*Math.PI)config[anime.objectID].rotate.z -= 2*Math.PI
+    if(config[anime.objectID].rotate.x >= 2*Math.PI)config[anime.objectID].rotate.x -= 2*Math.PI
+    if(config[anime.objectID].rotate.y >= 2*Math.PI)config[anime.objectID].rotate.y -= 2*Math.PI
+    if(config[anime.objectID].rotate.z >= 2*Math.PI)config[anime.objectID].rotate.z -= 2*Math.PI
     if(config[anime.objectID].rotate.x < 0)config[anime.objectID].rotate.x += 2*Math.PI
     if(config[anime.objectID].rotate.y < 0)config[anime.objectID].rotate.y += 2*Math.PI
     if(config[anime.objectID].rotate.z < 0)config[anime.objectID].rotate.z +=2* Math.PI

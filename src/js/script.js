@@ -1,3 +1,4 @@
+
 function main() {
   const { gl, programInfo } = initializeWorld();
 
@@ -36,9 +37,32 @@ function main() {
       translation.z,
     );
     matrix = m4.scale(matrix,scale.x,scale.y,scale.z)
-    matrix = m4.xRotate(matrix, Rotation.x)
-    matrix = m4.yRotate(matrix, Rotation.y)
-    matrix = m4.zRotate(matrix, Rotation.z)
+
+    //var matrix2 = m4.axisRotate(matrix,[1,0,0], Rotation.x)
+
+    //console.log(matrix2)
+
+    
+    
+    //var qua = Quaternion.fromEuler(-Rotation.z,-Rotation.x,-Rotation.y,'XYZ')
+    //var w = Math.sqrt( 1- Math.pow(Rotation.x/Math.PI*2,2),2)
+    //if(Rotation.x> Math.PI*2)console.log(Rotation.x)
+      
+    var quaX = Quaternion.fromEuler(Rotation.z,Rotation.x,Rotation.y).conjugate()
+    
+
+    matrix = m4.multiply(matrix, quaX.toMatrix4())
+    //matrix = m4.yRotate(matrix, Rotation.y)
+    
+    //console.log(m4.normalize([Math.cos(Rotation.x),Math.cos(Rotation.y),Math.cos(Rotation.z)]))
+    //console.log( rotationZYX(Rotation.z,Rotation.y,Rotation.x))
+    //matrix = m4.multiply(matrix, rotationZYX(Rotation.z,Rotation.y,Rotation.x))
+    //matrix = m4.axisRotate(matrix,m4.normalize([Math.cos(Rotation.x),Math.cos(Rotation.y),Math.cos(Rotation.z)]), Rotation.x+Rotation.y+Rotation.z)
+    //matrix = m4.xRotate(matrix, Rotation.x)
+    //matrix = m4.zRotate(matrix, Rotation.z)
+    
+
+    
 
 
     return matrix
@@ -117,7 +141,7 @@ function main() {
     element.rotate,
     element.scale
   );
-  console.log(element.rotate)
+  
   element.u_diffuse= tex
   element.u_faceIndex= [0, 1, 2, 3, 4, 5,6,7,8,9]
   twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
